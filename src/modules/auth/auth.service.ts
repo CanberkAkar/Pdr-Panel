@@ -4,8 +4,9 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { LoginUserDto } from './dto/login-user.dto';
-
+import { JwtService } from '@nestjs/jwt';
 import { Users } from './entites/auth.entity';
+import { UserToken } from './entites/token.entity';
 import { CryptoService } from '../../common/crypto/crypto.service';
 
 @Injectable()
