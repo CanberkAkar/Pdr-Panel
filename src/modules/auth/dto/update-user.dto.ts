@@ -11,5 +11,5 @@ export class UpdateUserDto extends CreateUserDto{
     @ApiProperty({
         example:'Id'
      })
-     usr_id:number;
+     id:number;
 }

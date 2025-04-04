@@ -9,10 +9,10 @@ export class CreateUserDto{
     @ApiProperty({
         example:'Canberk Akar'
      })
-    usr_name:string;
+    name:string;
     @IsEmail()
     @ApiProperty({
         example:'info@deneme.com'
      })
-    usr_email:string;
+    email:string;
 }
