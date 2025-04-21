@@ -7,6 +7,11 @@ import { UserToken } from './entites/token.entity';
 import { Users } from './entites/auth.entity';
 import { Request } from 'express';
 
+const customTokenExtractor = (req: Request): string | null => {
+  const token = req.headers['authorization'];
+  return typeof token === 'string' ? token.trim() : null;
+};
+
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
@@ -16,16 +21,14 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     private readonly userRepository: Repository<Users>,
   ) {
     super({
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      secretOrKey: process.env.SECRETKEY,  
-      passReqToCallback: true, 
+      jwtFromRequest: ExtractJwt.fromExtractors([customTokenExtractor]),
+      secretOrKey: process.env.SECRETKEY,
+      passReqToCallback: true,
     });
   }
 
   async validate(req: Request, payload: any) {
-    const authHeader = req.headers.authorization;
-    const token = authHeader?.split(' ')[1]; 
-
+    const token = req.headers['authorization']?.trim();
     if (!token) {
       throw new UnauthorizedException('TOKEN IS MISSING.');
     }
