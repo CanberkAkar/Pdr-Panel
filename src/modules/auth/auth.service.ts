@@ -7,7 +7,7 @@ import { Users } from './entites/auth.entity';
 import { UserToken } from './entites/token.entity';
 import { CryptoService } from '../../common/crypto/crypto.service';
 import { LoginUserDto } from './dto/login-user.dto';
-
+import { CreateUserDto } from './dto/create-user.dto';
 @Injectable()
 export class AuthService {
   private readonly logger = new Logger(AuthService.name);
@@ -36,8 +36,8 @@ export class AuthService {
     const user = await this.authRepository.findOne({ where: { email, password } });
 
     if (!user) {
-      // return this.cyrptoService.encrypt({ status: "404", message: "User not found" });
-      return { status: "404", message: "User not found" };
+       return this.cyrptoService.encrypt({ status: "404", message: "User not found" });
+    // return { status: "404", message: "User not found" };
 
     }
 
@@ -53,16 +53,35 @@ export class AuthService {
 
     await this.tokenRepository.save(tokenEntity);
 
-    //  return this.cyrptoService.encrypt({
-    //   status: "200",
-    //   user: user,
-    //   token: access_token,
-    // });
-    return {
+     return this.cyrptoService.encrypt({
       status: "200",
       user: user,
       token: access_token,
-    };
+    });
+    // return {
+    //   status: "200",
+    //   user: user,
+    //   token: access_token,
+    // };
 
   }
+  async insert(createUserDto: CreateUserDto) {
+    this.logger.log('Attempting to create a new user');   
+    
+    try {
+         const users        = this.authRepository.create(createUserDto);  
+          users.email       = createUserDto.email;
+          users.name        = createUserDto.name;
+          users.password    = createUserDto.password; 
+          users.contact     = createUserDto.contact;
+          users.phoneNumber = createUserDto.phoneNumber; 
+          users.role        = createUserDto.role; 
+          await this.authRepository.save(users);   
+          
+          this.logger.log(`User created successfully with ID: ${users.id}`); 
+          return this.cyrptoService.encrypt({ status: "201", user: users });
+      } catch (error) {
+        return this.cyrptoService.encrypt({ status: "400", message: "User not found" });
+       }
+}
 }
