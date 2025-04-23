@@ -6,7 +6,7 @@ import { Users } from './entites/auth.entity';
 import { CryptoModule } from './../../common/crypto/crypto.module';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
-import { JwtStrategy } from './auth.strategy';
+import { JwtStrategy } from '../../config/auth.strategy';
 import { UserToken } from './entites/token.entity';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
