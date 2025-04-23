@@ -8,13 +8,15 @@ import { UserToken } from './entites/token.entity';
 import { CryptoService } from '../../common/crypto/crypto.service';
 import { LoginUserDto } from './dto/login-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 @Injectable()
 export class AuthService {
   private readonly logger = new Logger(AuthService.name);
 
   constructor(
     @InjectRepository(Users) private readonly authRepository: Repository<Users>,
-    @InjectRepository(UserToken) private readonly tokenRepository: Repository<UserToken>,
+    @InjectRepository(UserToken)
+    private readonly tokenRepository: Repository<UserToken>,
     private readonly jwtService: JwtService,
     private readonly cyrptoService: CryptoService,
   ) {}
@@ -24,7 +26,7 @@ export class AuthService {
     const users = await this.authRepository.find();
     // return this.cyrptoService.encrypt({ status: "200", user: users });
 
-     return { status: "200", user: users };
+    return { status: '200', user: users };
   }
 
   async login(loginUserDto: LoginUserDto) {
@@ -33,18 +35,22 @@ export class AuthService {
     const email = loginUserDto.email;
     const password = this.cyrptoService.hashPassword(loginUserDto.password);
 
-    const user = await this.authRepository.findOne({ where: { email, password } });
+    const user = await this.authRepository.findOne({
+      where: { email, password },
+    });
 
     if (!user) {
-       return this.cyrptoService.encrypt({ status: "404", message: "User not found" });
-    // return { status: "404", message: "User not found" };
-
+      return this.cyrptoService.encrypt({
+        status: '404',
+        message: 'User not found',
+      });
+      // return { status: "404", message: "User not found" };
     }
 
-     const payload = { sub: user.id, email: user.email };
-     const access_token = this.jwtService.sign(payload);
+    const payload = { sub: user.id, email: user.email };
+    const access_token = this.jwtService.sign(payload);
 
-     const tokenEntity = this.tokenRepository.create({
+    const tokenEntity = this.tokenRepository.create({
       user_id: user.id,
       token: access_token,
       create_date: new Date(),
@@ -53,8 +59,8 @@ export class AuthService {
 
     await this.tokenRepository.save(tokenEntity);
 
-     return this.cyrptoService.encrypt({
-      status: "200",
+    return this.cyrptoService.encrypt({
+      status: '200',
       user: user,
       token: access_token,
     });
@@ -63,25 +69,67 @@ export class AuthService {
     //   user: user,
     //   token: access_token,
     // };
-
   }
   async insert(createUserDto: CreateUserDto) {
-    this.logger.log('Attempting to create a new user');   
-    
+    this.logger.log('Attempting to create a new user');
+
     try {
-         const users        = this.authRepository.create(createUserDto);  
-          users.email       = createUserDto.email;
-          users.name        = createUserDto.name;
-          users.password    = createUserDto.password; 
-          users.contact     = createUserDto.contact;
-          users.phoneNumber = createUserDto.phoneNumber; 
-          users.role        = createUserDto.role; 
-          await this.authRepository.save(users);   
-          
-          this.logger.log(`User created successfully with ID: ${users.id}`); 
-          return this.cyrptoService.encrypt({ status: "201", user: users });
-      } catch (error) {
-        return this.cyrptoService.encrypt({ status: "400", message: "User not found" });
-       }
-}
+      const users = this.authRepository.create(createUserDto);
+      users.email = createUserDto.email;
+      users.name = createUserDto.name;
+      users.password = createUserDto.password;
+      users.contact = createUserDto.contact;
+      users.phoneNumber = createUserDto.phoneNumber;
+      users.role = createUserDto.role;
+      await this.authRepository.save(users);
+
+      this.logger.log(`User created successfully with ID: ${users.id}`);
+      return this.cyrptoService.encrypt({ status: '201', user: users });
+    } catch (error) {
+      return this.cyrptoService.encrypt({
+        status: '400',
+        message: 'User not created',
+      });
+    }
+  }
+  async update(updateUserDto: UpdateUserDto) {
+    await this.logger.log('Attempting to update user');
+    const users = await this.authRepository.findOne({
+      where: { id: Number(updateUserDto.id) },
+    });
+    try {
+      if (users) {
+        users.email = updateUserDto.email;
+        users.name = updateUserDto.name;
+        users.password = updateUserDto.password;
+        users.contact = updateUserDto.contact;
+        users.phoneNumber = updateUserDto.phoneNumber;
+        users.role = updateUserDto.role;
+        await this.authRepository.save(users);
+        return this.cyrptoService.encrypt({ status: '200', user: users });
+      }
+    } catch (error) {
+      return this.cyrptoService.encrypt({
+        status: '400',
+        message: 'User not updated',
+      });
+    }
+  }
+  async delete(userId: number) {
+    await this.logger.log('Attempting to update user');
+    const user = await this.authRepository.findOne({
+      where: { id: Number(userId) },
+    });
+    try {
+      if (user) {
+        await this.authRepository.softDelete(Number(userId));
+        return this.cyrptoService.encrypt( { status: '200', user: user });
+      }
+    } catch (error) {
+      return this.cyrptoService.encrypt({
+        status: '400',
+        message: 'User not deleted',
+      });
+    }
+  }
 }
