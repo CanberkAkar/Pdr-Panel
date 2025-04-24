@@ -3,8 +3,8 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { JwtService } from '@nestjs/jwt';
 
-import { Users } from './entites/auth.entity';
-import { UserToken } from './entites/token.entity';
+import { Users } from './entities/auth.entity';
+import { UserToken } from './entities/token.entity';
 import { CryptoService } from '../../common/crypto/crypto.service';
 import { LoginUserDto } from './dto/login-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
