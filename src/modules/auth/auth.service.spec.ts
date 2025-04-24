@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthService } from './auth.service';
-import { Users } from './entites/auth.entity';
+import { Users } from './entities/auth.entity';
 import { Repository } from 'typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { CryptoService } from '../../common/crypto/crypto.service';
