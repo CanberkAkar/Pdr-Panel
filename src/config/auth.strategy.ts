@@ -3,8 +3,8 @@ import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { UserToken } from '../modules/auth/entites/token.entity';
-import { Users } from '../modules/auth/entites/auth.entity';
+import { UserToken } from '../modules/auth/entities/token.entity';
+import { Users } from '../modules/auth/entities/auth.entity';
 import { Request } from 'express';
 
 const customTokenExtractor = (req: Request): string | null => {
