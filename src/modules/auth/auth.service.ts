@@ -77,7 +77,7 @@ export class AuthService {
       const users = this.authRepository.create(createUserDto);
       users.email = createUserDto.email;
       users.name = createUserDto.name;
-      users.password = createUserDto.password;
+      users.password = this.cyrptoService.hashPassword(createUserDto.password);
       users.contact = createUserDto.contact;
       users.phoneNumber = createUserDto.phoneNumber;
       users.role = createUserDto.role;
@@ -132,4 +132,21 @@ export class AuthService {
       });
     }
   }
+  async logout(token: string) {
+    try {
+      this.logger.log('Attempting to logout user');
+      const tokenEntity = await this.tokenRepository.findOne({ where: { token } });
+  
+      if (tokenEntity) {
+        await this.tokenRepository.delete(tokenEntity.id);
+        return this.cyrptoService.encrypt({ status: '200', message: 'Logout successful' });
+      } else {
+        return this.cyrptoService.encrypt({ status: '404', message: 'Token not found' });
+      }
+    } catch (error) {
+      this.logger.error('Logout error', error);
+      return this.cyrptoService.encrypt({ status: '500', message: 'Internal server error' });
+    }
+  }
+  
 }
