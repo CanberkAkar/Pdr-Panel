@@ -23,4 +23,7 @@ export class AppointmentsService {
        // return this.cyrptoService.encrypt({ status: "200", appointments: appointments });
         return { status: "200", appointments: appointments };
        }
+      async insert(createAppointmentDto: CreateAppointmentDto) {
+      
+      }
 }
