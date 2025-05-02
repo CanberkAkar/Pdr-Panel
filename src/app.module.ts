@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import configuration from './config/config'; 
 import { JwtModule } from '@nestjs/jwt';
 import { AuthModule } from '././modules/auth/auth.module'; 
+import { AppointmentsModule } from './modules/appointments/appointments.module';
 import { CryptoModule } from './common/crypto/crypto.module';
  
 @Module({
@@ -24,7 +25,7 @@ import { CryptoModule } from './common/crypto/crypto.module';
       secret: process.env.SECRETKEY,
       signOptions: { expiresIn: '1h' },
     }),
-    AuthModule,
+    AuthModule,AppointmentsModule
    ],
 })
 export class AppModule {}
