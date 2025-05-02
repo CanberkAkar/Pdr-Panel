@@ -12,7 +12,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
-    ConfigModule, // Bu satırı unutma
+    ConfigModule,
     TypeOrmModule.forFeature([Users, UserToken]),
     CryptoModule,
     PassportModule,
@@ -27,5 +27,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
   ],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy],
+  exports: [TypeOrmModule], // <-- BUNU EKLE
 })
 export class AuthModule {}
+
