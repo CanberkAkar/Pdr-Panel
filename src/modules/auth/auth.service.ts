@@ -24,10 +24,9 @@ export class AuthService {
   async list() {
     await this.logger.log('Attempting to list all users');
     const users = await this.authRepository.find();
-    // return this.cyrptoService.encrypt({ status: "200", user: users });
+     return this.cyrptoService.encrypt({ status: "200", user: users });
 
-    return { status: '200', user: users };
-  }
+   }
 
   async login(loginUserDto: LoginUserDto) {
     await this.logger.log('Attempting to login user');
@@ -44,8 +43,7 @@ export class AuthService {
         status: '404',
         message: 'User not found',
       });
-      // return { status: "404", message: "User not found" };
-    }
+     }
 
     const payload = { sub: user.id, email: user.email };
     const access_token = this.jwtService.sign(payload);
@@ -64,11 +62,7 @@ export class AuthService {
       user: user,
       token: access_token,
     });
-    // return {
-    //   status: "200",
-    //   user: user,
-    //   token: access_token,
-    // };
+ 
   }
   async insert(createUserDto: CreateUserDto) {
     this.logger.log('Attempting to create a new user');
