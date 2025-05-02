@@ -4,6 +4,8 @@ import { Users } from './entities/auth.entity';
 import { Repository } from 'typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { CryptoService } from '../../common/crypto/crypto.service';
+import { JwtService } from '@nestjs/jwt';
+import { UserToken } from './entities/token.entity';
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -12,16 +14,27 @@ describe('AuthService', () => {
 
   beforeEach(async () => {
     const mockAuthRepository = {
-      find: jest.fn().mockResolvedValue([]), // `find` metodu taklit ediliyor
-      save: jest.fn().mockResolvedValue({}),  // `save` metodu taklit ediliyor
-      findOne: jest.fn().mockResolvedValue({}), // `findOne` metodu taklit ediliyor
-      softDelete: jest.fn().mockResolvedValue({}), // `softDelete` metodu taklit ediliyor
+      find: jest.fn().mockResolvedValue([]),
+      save: jest.fn().mockResolvedValue({}),
+      findOne: jest.fn().mockResolvedValue({}),
+      softDelete: jest.fn().mockResolvedValue({}),
     };
 
-    // Mock CryptoService
+    const mockTokenRepository = {
+      create: jest.fn().mockReturnValue({}),
+      save: jest.fn().mockResolvedValue({}),
+      findOne: jest.fn().mockResolvedValue({}),
+      delete: jest.fn().mockResolvedValue({}),
+    };
+
     const mockCryptoService = {
-      encrypt: jest.fn().mockReturnValue('encrypted-value'), // CryptoService'in encrypt fonksiyonunu mockla
-      decrypt: jest.fn().mockReturnValue('decrypted-value'), // CryptoService'in decrypt fonksiyonunu mockla
+      encrypt: jest.fn().mockReturnValue('encrypted-value'),
+      decrypt: jest.fn().mockReturnValue('decrypted-value'),
+      hashPassword: jest.fn().mockReturnValue('hashed-password'),
+    };
+
+    const mockJwtService = {
+      sign: jest.fn().mockReturnValue('jwt-token'),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -29,11 +42,19 @@ describe('AuthService', () => {
         AuthService,
         {
           provide: getRepositoryToken(Users),
-          useValue: mockAuthRepository, // Mock repository kullanıyoruz
+          useValue: mockAuthRepository,
         },
         {
-          provide: CryptoService, // CryptoService mock'u ekliyoruz
+          provide: getRepositoryToken(UserToken),
+          useValue: mockTokenRepository,
+        },
+        {
+          provide: CryptoService,
           useValue: mockCryptoService,
+        },
+        {
+          provide: JwtService,
+          useValue: mockJwtService,
         },
       ],
     }).compile();
@@ -49,8 +70,8 @@ describe('AuthService', () => {
 
   it('should list all users', async () => {
     const result = await service.list();
-    expect(result).toEqual('encrypted-value');  // Burada yalnızca string bekliyoruz
-    expect(authRepository.find).toHaveBeenCalled();  // find metodunun çağrıldığını kontrol et
-    expect(cryptoService.encrypt).toHaveBeenCalled();  // CryptoService'in encrypt fonksiyonunun çağrıldığını kontrol et
+    expect(result).toEqual("encrypted-value");  
+    expect(authRepository.find).toHaveBeenCalled();  
+    expect(cryptoService.encrypt).toHaveBeenCalledWith({ status: '200', user: [] });
   });
 });
