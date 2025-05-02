@@ -12,4 +12,9 @@ export class AppointmentsController {
     list(@Request() req) {
       return this.appointmentService.list();
     }
+    @Post('/insert')
+    @UseGuards(AuthGuard('jwt'))
+    insert(@Body() createAppointmentDto) {
+      return this.appointmentService.insert(createAppointmentDto);
+    }
 }
