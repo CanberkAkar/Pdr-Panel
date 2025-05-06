@@ -11,7 +11,8 @@ describe('AppointmentsController', () => {
     mockAppointmentService = {
       list: jest.fn().mockReturnValue('Appointment list'),
       insert: jest.fn().mockReturnValue('Appointment insert'),
-      update: jest.fn().mockReturnValue('Appointment update')
+      update: jest.fn().mockReturnValue('Appointment update'),
+      delete: jest.fn().mockReturnValue('Appointment delete')
 
      };
 
@@ -43,6 +44,9 @@ describe('AppointmentsController', () => {
     const result = controller.update(1, {} as UpdateAppointmentDto);
     expect(result).toBe('Appointment update');
   });
-
+  it('should return appointment delete', ()=>{
+    const result = controller.delete(1);
+    expect(result).toBe('Appointment delete');
+  });
 
 });
