@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Request, UseGuards, Put, Param, Delete } f
 import { AppointmentsService } from './appointments.service';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth } from '@nestjs/swagger';
+import { UpdateAppointmentDto } from './dto/update-appointment-dto';
 
 @ApiBearerAuth('access-token')
 @Controller('appointments')
@@ -16,5 +17,11 @@ export class AppointmentsController {
     @UseGuards(AuthGuard('jwt'))
     insert(@Body() createAppointmentDto) {
       return this.appointmentService.insert(createAppointmentDto);
+    }
+    @UseGuards(AuthGuard('jwt'))
+    @Put('/update/:id')
+    update(@Param('id') userId: number, @Body() body: UpdateAppointmentDto) {
+      body.id = Number(userId);
+      return this.appointmentService.update(body);
     }
 }
