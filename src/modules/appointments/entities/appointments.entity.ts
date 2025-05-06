@@ -12,15 +12,15 @@ export class Appointments {
     @Column()
     patientName:string;
     @Column()
-    patientId:string;
+    patientId:number;
     @Column()
     dateTime:Date;
     @Column()
-    duration:number;
+    duration:string;
     @Column()
     status:string;
     @Column()
-    note:string;
+    notes:string;
     @CreateDateColumn()
     createDate!:Date;
     @UpdateDateColumn()
