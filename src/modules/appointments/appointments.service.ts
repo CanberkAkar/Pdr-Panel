@@ -11,15 +11,16 @@ export class AppointmentsService {
     private readonly logger = new Logger(AppointmentsService.name);
 
     constructor(
-        @InjectRepository(Appointments) private readonly appointmentRepository: Repository<Appointments>,
-        @InjectRepository(UserToken)
-          private readonly cyrptoService: CryptoService,
-      ) {}
+      @InjectRepository(Appointments)
+      private readonly appointmentRepository: Repository<Appointments>,
+    
+      private readonly cyrptoService: CryptoService, // sadece bu kadar
+    ) {}
       async list() {
         await this.logger.log('Attempting to list all users');
         const appointments = await this.appointmentRepository.find();
        // return this.cyrptoService.encrypt({ status: "200", appointments: appointments });
-        return { status: "200", appointments: appointments };
+       return this.cyrptoService.encrypt( { status: "200", appointments: appointments });
        }
       async insert(createAppointmentDto: CreateAppointmentDto) {
         this.logger.log('Attempting to create a new user');
@@ -38,9 +39,43 @@ export class AppointmentsService {
         } catch (error) {
           return this.cyrptoService.encrypt({
             status: '400',
-            message: 'User not created',
+            message: 'Appointment not created',
           });
         }
       }
-      async update(updateAppointmentDto:UpdateAppointmentDto){}
+      async update(updateAppointmentDto: UpdateAppointmentDto) {
+        await this.logger.log('Attempting to update a user');
+        const appointment = await this.appointmentRepository.findOne({
+          where: { id: Number(updateAppointmentDto.id) },
+        });
+      
+        if (!appointment) {
+          return this.cyrptoService.encrypt({
+            status: '404',
+            message: 'Appointment not found',
+          });
+        }
+      
+        try {
+          appointment.psychologistId = updateAppointmentDto.psychologistId;
+          appointment.patientName = updateAppointmentDto.patientName;
+          appointment.patientId = updateAppointmentDto.patientId;
+          appointment.duration = updateAppointmentDto.duration;
+          appointment.status = updateAppointmentDto.status;
+          appointment.notes = updateAppointmentDto.notes;
+      
+          await this.appointmentRepository.save(appointment);
+      
+          return this.cyrptoService.encrypt({
+            status: '200',
+            appointment: appointment,
+          });
+        } catch (error) {
+          return this.cyrptoService.encrypt({
+            status: '400',
+            message: 'Appointment not updated',
+          });
+        }
+      }
+      
 }
