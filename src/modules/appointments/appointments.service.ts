@@ -20,7 +20,8 @@ export class AppointmentsService {
         await this.logger.log('Attempting to list all users');
         const appointments = await this.appointmentRepository.find();
        // return this.cyrptoService.encrypt({ status: "200", appointments: appointments });
-       return this.cyrptoService.encrypt( { status: "200", appointments: appointments });
+       return this.cyrptoService.encrypt( { status: "200", description:'Appointment created', appointments: appointments
+      });
        }
       async insert(createAppointmentDto: CreateAppointmentDto) {
         this.logger.log('Attempting to create a new user');
@@ -68,12 +69,30 @@ export class AppointmentsService {
       
           return this.cyrptoService.encrypt({
             status: '200',
+            description:'Appointment updated',
             appointment: appointment,
           });
         } catch (error) {
           return this.cyrptoService.encrypt({
             status: '400',
             message: 'Appointment not updated',
+          });
+        }
+      }
+      async delete(appointmentId: number) {
+        await this.logger.log('Attempting to update user');
+        const appointment = await this.appointmentRepository.findOne({
+          where: { id: Number(appointmentId) },
+        });
+        try {
+          if (appointment) {
+            await this.appointmentRepository.softDelete(Number(appointmentId));
+            return this.cyrptoService.encrypt( { status: '200', description: "Appointment deleted" });
+          }
+        } catch (error) {
+          return this.cyrptoService.encrypt({
+            status: '400',
+            message: 'Appointment not deleted',
           });
         }
       }
