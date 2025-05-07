@@ -25,4 +25,9 @@ export class AppointmentsController {
       body.id = Number(userId);
       return this.appointmentService.update(body);
     }
+    @UseGuards(AuthGuard('jwt'))
+    @Delete('/delete/:id')
+    delete(@Param('id') appointmentId: number) {
+      return this.appointmentService.delete(appointmentId);
+    }
 }
