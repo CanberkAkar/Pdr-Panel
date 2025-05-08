@@ -75,6 +75,8 @@ export class AuthService {
       users.contact = createUserDto.contact;
       users.phoneNumber = createUserDto.phoneNumber;
       users.role = createUserDto.role;
+      users.doctorId = createUserDto.doctorId;
+      users.isPatients = createUserDto.isPatients;
       await this.authRepository.save(users);
 
       this.logger.log(`User created successfully with ID: ${users.id}`);
@@ -99,6 +101,8 @@ export class AuthService {
         users.contact = updateUserDto.contact;
         users.phoneNumber = updateUserDto.phoneNumber;
         users.role = updateUserDto.role;
+        users.doctorId = updateUserDto.doctorId;
+        users.isPatients = updateUserDto.isPatients;
         await this.authRepository.save(users);
         return this.cyrptoService.encrypt({ status: '200', user: users });
       }
