@@ -1,5 +1,5 @@
 
-import { IsEmail,IsNotEmpty,IsString } from '@nestjs/class-validator';
+import { IsEmail,IsNotEmpty,IsString,IsNumber } from '@nestjs/class-validator';
 import { ApiProperty, } from '@nestjs/swagger';
 
 export class CreateUserDto{
@@ -35,4 +35,14 @@ export class CreateUserDto{
         example:'user'
      })
     role:string;
+    @IsNumber()
+    @ApiProperty({
+        example:0
+     })
+    isPatients:number;
+    @IsNumber()
+    @ApiProperty({
+        example:1
+     })
+    doctorId:number;
 }
