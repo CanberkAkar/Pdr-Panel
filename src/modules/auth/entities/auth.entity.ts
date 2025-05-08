@@ -25,4 +25,8 @@ export class Users {
     updatedDate!:Date;
     @DeleteDateColumn()
     deletedDate!:Date;
+    @Column({default:1})
+    isPatients:number;
+    @Column()
+    doctorId:number;
 }
