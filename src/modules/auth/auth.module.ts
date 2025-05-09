@@ -27,7 +27,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
   ],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy],
-  exports: [TypeOrmModule], // <-- BUNU EKLE
+  exports: [TypeOrmModule],
 })
 export class AuthModule {}
 
