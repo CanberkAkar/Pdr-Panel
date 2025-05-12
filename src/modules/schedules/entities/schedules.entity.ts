@@ -10,6 +10,14 @@ export class Schedules {
     @Column()
     psychologistId: number;
     @Column()
+    patientId: number;
+    @Column()
+    patientName: string;
+    @Column()
+    status: string;
+    @Column()
+    note: string;
+    @Column()
     day:Date;
     @Column({ type: "time" })
     startTime: string;
