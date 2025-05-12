@@ -1,6 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { SchedulesController } from './schedules.controller';
 import { SchedulesService } from './schedules.service';
+import { CreateScheduleDto } from './dto/create-schedules-dto';
+import { UpdateScheduleDto } from './dto/update-schedules-dto';
 describe('SchedulesController', () => {
   let controller: SchedulesController;
   let mockSchedulesService: Partial<SchedulesService>;
@@ -32,5 +34,17 @@ describe('SchedulesController', () => {
   it('should return appointment list', () => {
     const result = controller.list({});
     expect(result).toBe('Appointment list');
+  });
+  it('should return appointment insert', () => {
+    const result = controller.insert({} as CreateScheduleDto);
+    expect(result).toBe('Appointment insert');
+  });
+  it('should return appointment update', () => {
+    const result = controller.update(1, {} as UpdateScheduleDto);
+    expect(result).toBe('Appointment update');
+  });
+  it('should return appointment delete', ()=>{
+    const result = controller.delete(1);
+    expect(result).toBe('Appointment delete');
   });
 });
