@@ -6,7 +6,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
-@ApiTags('auth') // Swagger UI'da 'auth' grubu
+@ApiTags('Auth') // Swagger UI'da 'auth' grubu
 @ApiBearerAuth('access-token') // Buradaki 'access-token', main.ts'deki key ile aynı olmalı
 @Controller('auth')
 export class AuthController {
