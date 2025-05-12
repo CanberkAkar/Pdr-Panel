@@ -6,6 +6,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { AuthModule } from '././modules/auth/auth.module'; 
 import { AppointmentsModule } from './modules/appointments/appointments.module';
 import { CryptoModule } from './common/crypto/crypto.module';
+import { SchedulesModule } from './modules/schedules/schedules.module';
  
 @Module({
   imports: [
@@ -25,7 +26,7 @@ import { CryptoModule } from './common/crypto/crypto.module';
       secret: process.env.SECRETKEY,
       signOptions: { expiresIn: '1h' },
     }),
-    AuthModule,AppointmentsModule
+    AuthModule,AppointmentsModule,SchedulesModule
    ],
 })
 export class AppModule {}
