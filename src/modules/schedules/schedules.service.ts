@@ -21,7 +21,7 @@ export class SchedulesService {
         // return this.cyrptoService.encrypt({ status: "200", appointments: appointments });
         return this.cyrptoService.encrypt({
           status: '200',
-          description: 'Appointment listed',
+          description: 'Schedules listed',
           schedules: schedules,
         });
       }
@@ -40,7 +40,7 @@ export class SchedulesService {
           await this.schedulesRepository.save(schedules);
           
           this.logger.log(
-            `Appointment created successfully with ID: ${schedules.id}`,
+            `Schedules created successfully with ID: ${schedules.id}`,
           );
           return this.cyrptoService.encrypt({
             status: '201',
@@ -49,7 +49,7 @@ export class SchedulesService {
         } catch (error) {
           return this.cyrptoService.encrypt({
             status: '400',
-            message: 'Appointment not created',
+            message: 'Schedules not created',
           });
         }
       }
@@ -62,7 +62,7 @@ export class SchedulesService {
         if (!schedules) {
           return this.cyrptoService.encrypt({
             status: '404',
-            message: 'Appointment not found',
+            message: 'Schedules not found',
           });
         }
           try {
@@ -79,14 +79,32 @@ export class SchedulesService {
     
           return this.cyrptoService.encrypt({
             status: '200',
-            description: 'Appointment updated',
+            description: 'Schedules updated',
             schedules: schedules,
           });
         } catch (error) {
           return this.cyrptoService.encrypt({
             status: '400',
-            message: 'Appointment not updated',
+            message: 'Schedules not updated',
           });
         }
+      }
+      async delete(scheduleId: number) {
+        await this.logger.log('Attempting to delete a user');
+        const schedules = await this.schedulesRepository.findOne({
+          where: { id: Number(scheduleId) },
+        });
+    
+        if (!schedules) {
+          return this.cyrptoService.encrypt({
+            status: '404',
+            message: 'Schedules not found',
+          });
+        }
+        await this.schedulesRepository.softDelete(scheduleId);
+        return this.cyrptoService.encrypt({
+          status: '200',
+          description: 'Schedules deleted',
+        });
       }
 }
