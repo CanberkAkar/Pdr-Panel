@@ -27,4 +27,9 @@ export class SchedulesController {
       body.id = Number(scheduleId);
       return this.schedulesService.update(body);
     }
+    @UseGuards(AuthGuard('jwt'))
+    @Delete('/delete/:id') 
+    delete(@Param('id') scheduleId: number) {
+      return this.schedulesService.delete(Number(scheduleId));
+    }
 }
